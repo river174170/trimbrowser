@@ -1,0 +1,43 @@
+name: Build TrimBrowser for TrimUI Smart Pro
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'CMakeLists.txt'
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Build
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu cmake ninja-build wget
+
+          wget -q https://github.com/trimui/toolchain_sdk_smartpro/releases/download/20231018/SDK_usr_tg5040_a133p.tgz -O /tmp/sdk.tgz
+          sudo mkdir -p /opt/trimui-sdk/sysroot
+          sudo tar xzf /tmp/sdk.tgz -C /opt/trimui-sdk/sysroot --strip-components=1
+
+          cmake -B build -DCMAKE_TOOLCHAIN_FILE=cmake/aarch64-trimui.cmake -DCMAKE_BUILD_TYPE=Release
+          cmake --build build -j$(nproc)
+
+      - name: Package
+        run: |
+          mkdir -p Browser/packaging
+          cp build/trimbrowser Browser/
+          cp packaging/config.json Browser/
+          cp packaging/launch.sh Browser/
+          cp -r packaging/fonts Browser/ 2>/dev/null || true
+          zip -r Browser-TrimUI-SmartPro.zip Browser/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Browser-TrimUI-SmartPro
+          path: Browser-TrimUI-SmartPro.zip
