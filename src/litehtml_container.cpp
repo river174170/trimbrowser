@@ -299,9 +299,10 @@ void SDLContainer::draw_solid_fill(litehtml::uint_ptr hdc,
                                     const litehtml::web_color& color)
 {
     SDL_SetRenderDrawBlendMode(m_renderer, SDL_BLENDMODE_BLEND);
-    SDL_SetRenderDrawColor(m_renderer, color.red, color.green, color.blue, color.alpha);
-    SDL_Rect r{layer.origin_box.x, layer.origin_box.y,
-               layer.origin_box.width, layer.origin_box.height};
+    SDL_SetRenderDrawColor(m_renderer, static_cast<Uint8>(color.red), static_cast<Uint8>(color.green),
+                            static_cast<Uint8>(color.blue), static_cast<Uint8>(color.alpha));
+    SDL_Rect r{static_cast<int>(layer.origin_box.x), static_cast<int>(layer.origin_box.y),
+                static_cast<int>(layer.origin_box.width), static_cast<int>(layer.origin_box.height)};
     SDL_RenderFillRect(m_renderer, &r);
 }
 
@@ -313,9 +314,10 @@ void SDLContainer::draw_linear_gradient(litehtml::uint_ptr hdc,
     if (g.color_points.empty()) return;
     auto& c = g.color_points[0].color;
     SDL_SetRenderDrawBlendMode(m_renderer, SDL_BLENDMODE_BLEND);
-    SDL_SetRenderDrawColor(m_renderer, c.red, c.green, c.blue, c.alpha);
-    SDL_Rect r{layer.origin_box.x, layer.origin_box.y,
-               layer.origin_box.width, layer.origin_box.height};
+    SDL_SetRenderDrawColor(m_renderer, static_cast<Uint8>(c.red), static_cast<Uint8>(c.green),
+                            static_cast<Uint8>(c.blue), static_cast<Uint8>(c.alpha));
+    SDL_Rect r{static_cast<int>(layer.origin_box.x), static_cast<int>(layer.origin_box.y),
+                static_cast<int>(layer.origin_box.width), static_cast<int>(layer.origin_box.height)};
     SDL_RenderFillRect(m_renderer, &r);
 }
 
@@ -350,7 +352,8 @@ void SDLContainer::draw_borders(litehtml::uint_ptr hdc,
         if (b.width <= 0 || b.style == litehtml::border_style_none) return;
         SDL_SetRenderDrawBlendMode(m_renderer, SDL_BLENDMODE_BLEND);
         SDL_SetRenderDrawColor(m_renderer,
-            b.color.red, b.color.green, b.color.blue, b.color.alpha);
+            static_cast<Uint8>(b.color.red), static_cast<Uint8>(b.color.green),
+            static_cast<Uint8>(b.color.blue), static_cast<Uint8>(b.color.alpha));
         for (int i = 0; i < b.width; i++) {
             SDL_RenderDrawLine(m_renderer, x1, y1 + i, x2, y2 + i);
         }
@@ -364,15 +367,15 @@ void SDLContainer::draw_borders(litehtml::uint_ptr hdc,
     // Left/Right borders as vertical
     if (borders.left.width > 0 && borders.left.style != litehtml::border_style_none) {
         SDL_SetRenderDrawColor(m_renderer,
-            borders.left.color.red, borders.left.color.green,
-            borders.left.color.blue, borders.left.color.alpha);
+            static_cast<Uint8>(borders.left.color.red), static_cast<Uint8>(borders.left.color.green),
+            static_cast<Uint8>(borders.left.color.blue), static_cast<Uint8>(borders.left.color.alpha));
         for (int i = 0; i < borders.left.width; i++)
             SDL_RenderDrawLine(m_renderer, pos.x + i, pos.y, pos.x + i, pos.y + pos.height);
     }
     if (borders.right.width > 0 && borders.right.style != litehtml::border_style_none) {
         SDL_SetRenderDrawColor(m_renderer,
-            borders.right.color.red, borders.right.color.green,
-            borders.right.color.blue, borders.right.color.alpha);
+            static_cast<Uint8>(borders.right.color.red), static_cast<Uint8>(borders.right.color.green),
+            static_cast<Uint8>(borders.right.color.blue), static_cast<Uint8>(borders.right.color.alpha));
         for (int i = 0; i < borders.right.width; i++)
             SDL_RenderDrawLine(m_renderer,
                 pos.x + pos.width - i, pos.y,
@@ -385,8 +388,10 @@ void SDLContainer::draw_list_marker(litehtml::uint_ptr hdc,
 {
     if (marker.marker_type == litehtml::list_style_type_none) return;
     SDL_SetRenderDrawColor(m_renderer,
-        marker.color.red, marker.color.green, marker.color.blue, marker.color.alpha);
-    SDL_Rect r{marker.pos.x, marker.pos.y + marker.pos.height / 2 - 3, 6, 6};
+        static_cast<Uint8>(marker.color.red), static_cast<Uint8>(marker.color.green),
+        static_cast<Uint8>(marker.color.blue), static_cast<Uint8>(marker.color.alpha));
+    SDL_Rect r{static_cast<int>(marker.pos.x),
+                static_cast<int>(marker.pos.y + marker.pos.height / 2 - 3), 6, 6};
     SDL_RenderFillRect(m_renderer, &r);
 }
 
