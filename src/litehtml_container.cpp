@@ -411,8 +411,8 @@ void SDLContainer::draw_image(litehtml::uint_ptr hdc,
 {
     // Images deferred — just show a light placeholder box
     SDL_SetRenderDrawColor(m_renderer, 60, 60, 65, 100);
-    SDL_Rect r{layer.border_box.x, layer.border_box.y,
-               layer.border_box.width, layer.border_box.height};
+    SDL_Rect r{static_cast<int>(layer.border_box.x), static_cast<int>(layer.border_box.y),
+                static_cast<int>(layer.border_box.width), static_cast<int>(layer.border_box.height)};
     SDL_RenderDrawRect(m_renderer, &r);
 }
 
