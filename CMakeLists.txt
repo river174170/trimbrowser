@@ -55,9 +55,9 @@ if(NOT SDL2_FOUND)
                PATHS ${CMAKE_SYSROOT}/usr/lib ${CMAKE_FIND_ROOT_PATH}/usr/lib)
 endif()
 
-# OpenSSL 1.1
-find_library(SSL_LIB   NAMES ssl   libssl   PATHS ${CMAKE_SYSROOT}/usr/lib NO_DEFAULT_PATH)
-find_library(CRYPTO_LIB NAMES crypto libcrypto PATHS ${CMAKE_SYSROOT}/usr/lib NO_DEFAULT_PATH)
+# OpenSSL 1.1 (optional - curl may have it built-in)
+find_library(SSL_LIB   NAMES ssl   libssl   PATHS ${CMAKE_SYSROOT}/usr/lib ${CMAKE_FIND_ROOT_PATH}/usr/lib NO_DEFAULT_PATH)
+find_library(CRYPTO_LIB NAMES crypto libcrypto PATHS ${CMAKE_SYSROOT}/usr/lib ${CMAKE_FIND_ROOT_PATH}/usr/lib NO_DEFAULT_PATH)
 
 # ── Executable ──────────────────────────────────────────────────────────────
 add_executable(trimbrowser ${SOURCES})
@@ -75,18 +75,24 @@ else()
     target_link_libraries(trimbrowser PRIVATE ${SDL2_LIBRARY})
 endif()
 
-target_link_libraries(trimbrowser PRIVATE
+# Core libraries (required)
+set(REQUIRED_LIBS
     litehtml
     ${FREETYPE_LIBRARIES}
     ${CURL_LIB}
-    ${SSL_LIB}
-    ${CRYPTO_LIB}
     z       # libz (zlib)
     pthread
     dl
     m
     stdc++fs
 )
+
+# SSL libraries (optional - may be bundled in curl)
+if(SSL_LIB AND CRYPTO_LIB)
+    list(APPEND REQUIRED_LIBS ${SSL_LIB} ${CRYPTO_LIB})
+endif()
+
+target_link_libraries(trimbrowser PRIVATE ${REQUIRED_LIBS})
 
 # Reduce binary size
 target_compile_options(trimbrowser PRIVATE -Os -ffunction-sections -fdata-sections)
