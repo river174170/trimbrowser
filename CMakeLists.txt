@@ -17,7 +17,16 @@ set(SOURCES
 )
 
 # ── litehtml (vendored) ──────────────────────────────────────────────────────
-# litehtml is a git submodule at vendor/litehtml
+# If it doesn't exist, try to clone it (useful for CI without submodules)
+if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/vendor/litehtml/CMakeLists.txt")
+    message(STATUS "litehtml not found, attempting to clone...")
+    execute_process(COMMAND git clone --depth=1 https://github.com/litehtml/litehtml ${CMAKE_CURRENT_SOURCE_DIR}/vendor/litehtml
+                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                    RESULT_VARIABLE CLONE_RESULT)
+    if(NOT CLONE_RESULT EQUAL 0)
+        message(FATAL_ERROR "Failed to clone litehtml. Please add it as a git submodule or ensure vendor/litehtml exists.")
+    endif()
+endif()
 add_subdirectory(vendor/litehtml EXCLUDE_FROM_ALL)
 
 # ── libcurl (vendored static build) ─────────────────────────────────────────
