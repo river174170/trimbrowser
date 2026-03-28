@@ -1,0 +1,9 @@
+{
+  "label":       "Browser",
+  "description": "Web browser for TrimUI Smart Pro",
+  "icon":        "icon.png",
+  "launcher":    "launch.sh",
+  "author":      "TrimBrowser",
+  "version":     "1.0.0",
+  "platform":    "tg5040"
+}
