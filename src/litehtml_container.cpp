@@ -419,7 +419,8 @@ void SDLContainer::draw_image(litehtml::uint_ptr hdc,
 void SDLContainer::set_clip(const litehtml::position& pos,
                              const litehtml::border_radiuses& br)
 {
-    SDL_Rect r{pos.x, pos.y, pos.width, pos.height};
+    SDL_Rect r{static_cast<int>(pos.x), static_cast<int>(pos.y),
+                static_cast<int>(pos.width), static_cast<int>(pos.height)};
     m_clip_stack.push_back(r);
     set_sdl_clip();
 }
