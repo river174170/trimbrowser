@@ -326,9 +326,10 @@ void SDLContainer::draw_radial_gradient(litehtml::uint_ptr hdc,
     if (g.color_points.empty()) return;
     auto& c = g.color_points[0].color;
     SDL_SetRenderDrawBlendMode(m_renderer, SDL_BLENDMODE_BLEND);
-    SDL_SetRenderDrawColor(m_renderer, c.red, c.green, c.blue, c.alpha);
-    SDL_Rect r{layer.origin_box.x, layer.origin_box.y,
-               layer.origin_box.width, layer.origin_box.height};
+    SDL_SetRenderDrawColor(m_renderer, static_cast<Uint8>(c.red), static_cast<Uint8>(c.green),
+                            static_cast<Uint8>(c.blue), static_cast<Uint8>(c.alpha));
+    SDL_Rect r{static_cast<int>(layer.origin_box.x), static_cast<int>(layer.origin_box.y),
+                static_cast<int>(layer.origin_box.width), static_cast<int>(layer.origin_box.height)};
     SDL_RenderFillRect(m_renderer, &r);
 }
 
