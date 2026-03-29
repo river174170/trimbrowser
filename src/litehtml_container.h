@@ -61,14 +61,14 @@ public:
                                    litehtml::font_metrics* fm) override;
     void delete_font(litehtml::uint_ptr hFont) override;
 
-    int text_width(const char* text, litehtml::uint_ptr hFont) override;
+    litehtml::pixel_t text_width(const char* text, litehtml::uint_ptr hFont) override;
 
     void draw_text(litehtml::uint_ptr hdc, const char* text,
                    litehtml::uint_ptr hFont, litehtml::web_color color,
                    const litehtml::position& pos) override;
 
-    int  pt_to_px(int pt) const override { return (int)(pt * 96.0 / 72.0); }
-    int  get_default_font_size() const override { return 16; }
+    litehtml::pixel_t pt_to_px(int pt) const override { return (litehtml::pixel_t)(pt * 96.0 / 72.0); }
+    litehtml::pixel_t get_default_font_size() const override { return 16; }
     const char* get_default_font_name() const override { return "sans-serif"; }
 
     void draw_list_marker(litehtml::uint_ptr hdc,

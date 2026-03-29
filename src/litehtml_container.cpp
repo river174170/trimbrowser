@@ -203,8 +203,8 @@ void SDLContainer::draw_text(int x, int y, const char* text, int size,
 
     if (centered) {
         // Measure width first
-        int w = text_width(text, reinterpret_cast<litehtml::uint_ptr>(face));
-        x -= w / 2;
+        litehtml::pixel_t w = text_width(text, reinterpret_cast<litehtml::uint_ptr>(face));
+        x -= (int)w / 2;
     }
     draw_string(x, y + size, text, face, size, color);
     FT_Done_Face(face);
@@ -263,11 +263,11 @@ void SDLContainer::delete_font(litehtml::uint_ptr hFont)
     }
 }
 
-int SDLContainer::text_width(const char* text, litehtml::uint_ptr hFont)
+litehtml::pixel_t SDLContainer::text_width(const char* text, litehtml::uint_ptr hFont)
 {
     if (!text || !hFont) return 0;
     auto* fh = reinterpret_cast<FontHandle*>(hFont);
-    if (!fh->face) return (int)strlen(text) * fh->size / 2;
+    if (!fh->face) return (litehtml::pixel_t)strlen(text) * fh->size / 2;
 
     FT_Set_Pixel_Sizes(fh->face, 0, fh->size);
     int width = 0;
@@ -279,7 +279,7 @@ int SDLContainer::text_width(const char* text, litehtml::uint_ptr hFont)
         else
             width += fh->size / 2;
     }
-    return width;
+    return (litehtml::pixel_t)width;
 }
 
 void SDLContainer::draw_text(litehtml::uint_ptr hdc, const char* text,

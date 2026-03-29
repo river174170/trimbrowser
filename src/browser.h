@@ -1,12 +1,50 @@
 #pragma once
 #include <SDL2/SDL.h>
 #include <stdbool.h>
+#include <string>
+#include <vector>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+// Forward declaration
 typedef struct Browser Browser;
+
+// Complete Browser struct definition
+struct Browser {
+    // Rendering
+    SDL_Renderer* renderer;
+    int width;
+    int height;
+
+    // HTML rendering
+    void* html_container;  // SDLContainer*
+    void* html_doc;        // litehtml::document*
+    float zoom;
+
+    // Navigation
+    std::string current_url;
+    std::string current_title;
+    std::vector<std::string> history;
+    int history_pos;
+
+    // UI state
+    bool addressbar_visible;
+    std::string addressbar_text;
+    bool bookmarks_visible;
+    std::vector<std::string> bookmarks;
+    int bookmark_selected;
+    int focused_link_index;
+
+    // Media
+    void* media_player;  // MediaPlayer*
+
+    // Scroll
+    int scroll_x;
+    int scroll_y;
+    int max_scroll_y;
+};
 
 // Lifecycle
 Browser* browser_create(SDL_Renderer* renderer, int width, int height);

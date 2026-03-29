@@ -135,12 +135,18 @@ int main(int argc, char* argv[])
                     browser_reload(browser);
                     break;
 
-                // Scrolling
+                // Scrolling (when bookmarks NOT visible)
                 case SDLK_UP:
-                    browser_scroll(browser, 0, -80);
+                case SDLK_w:  // w for up (vim-style)
+                    if (!browser->bookmarks_visible) {
+                        browser_scroll(browser, 0, -80);
+                    }
                     break;
                 case SDLK_DOWN:
-                    browser_scroll(browser, 0, 80);
+                case SDLK_s:  // s for down
+                    if (!browser->bookmarks_visible) {
+                        browser_scroll(browser, 0, 80);
+                    }
                     break;
                 case SDLK_LEFT:
                     browser_scroll(browser, -80, 0);
@@ -170,20 +176,6 @@ int main(int argc, char* argv[])
                         // Confirm URL in address bar
                         browser_navigate(browser, browser->addressbar_text.c_str());
                         browser_show_addressbar(browser); // toggle off
-                    }
-                    break;
-                case SDLK_UP:
-                    if (browser->bookmarks_visible) {
-                        browser->bookmark_selected = std::max(0, browser->bookmark_selected - 1);
-                    } else {
-                        browser_scroll(browser, 0, -80);
-                    }
-                    break;
-                case SDLK_DOWN:
-                    if (browser->bookmarks_visible) {
-                        browser->bookmark_selected = std::min((int)browser->bookmarks.size() - 1, browser->bookmark_selected + 1);
-                    } else {
-                        browser_scroll(browser, 0, 80);
                     }
                     break;
 
@@ -242,21 +234,14 @@ int main(int argc, char* argv[])
                 case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:  // R = page down
                     browser_scroll(browser, 0, win_h - 60);
                     break;
-                case SDL_CONTROLLER_BUTTON_A:       // A = click focused link or add bookmark
+                case SDL_CONTROLLER_BUTTON_A:       // A = click focused link or toggle bookmarks
                     if (browser->bookmarks_visible) {
-                        browser_add_bookmark(browser);
+                        browser_close_bookmarks(browser);
                     } else {
                         browser_click_focused(browser);
                     }
                     break;
-                case SDL_CONTROLLER_BUTTON_SELECT:  // SELECT = toggle bookmarks
-                    if (browser->bookmarks_visible) {
-                        browser_close_bookmarks(browser);
-                    } else {
-                        browser_show_bookmarks(browser);
-                    }
-                    break;
-                case SDL_CONTROLLER_BUTTON_GUIDE:   // Guide/Home = add bookmark
+                case SDL_CONTROLLER_BUTTON_LEFTSTICK:   // Left stick press = add bookmark
                     browser_add_bookmark(browser);
                     break;
                 default: break;
